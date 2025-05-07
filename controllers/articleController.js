@@ -1,4 +1,5 @@
 const Article = require("../models/Article");
+const cloudinary = require("../config/cloudinary");
 
 // جميع المقالات (من الأحدث إلى الأقدم)
 exports.getAllArticles = async (req, res) => {
@@ -20,16 +21,34 @@ exports.getArticlesByCategory = async (req, res) => {
   }
 };
 
+
+
 exports.createArticle = async (req, res) => {
   const { title, content, category } = req.body;
+  let imageUrl = null;
+
+  if (req.file) {
+    // إذا تم تحميل صورة
+    imageUrl = req.file.path; // هذا هو رابط الصورة المخزن في Cloudinary
+  }
+
   try {
-    const article = new Article({ title, content, category });
-    await article.save();
-    res.status(201).json(article);
+    const article = new Article({
+      title,
+      content,
+      category,
+      image: imageUrl, // حفظ الرابط في MongoDB
+    });
+
+    await article.save(); // حفظ المقال
+    res.status(201).json(article); // إرسال المقال الذي تم حفظه
   } catch (error) {
+    console.error("❌ Error creating article:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 
 exports.updateArticle = async (req, res) => {
