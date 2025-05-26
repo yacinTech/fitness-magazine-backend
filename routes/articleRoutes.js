@@ -4,6 +4,7 @@ const articleController = require("../controllers/articleController");
 const upload = require("../middlewares/upload");
 
 router.get("/", articleController.getAllArticles);
+router.get("/:id", articleController.getArticleById);
 router.get("/category/:category", articleController.getArticlesByCategory);
 
 router.post("/", upload.single("image"), articleController.createArticle);
