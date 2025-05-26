@@ -11,6 +11,20 @@ exports.getAllArticles = async (req, res) => {
   }
 };
 
+// مقال حسب المعرف (ID)
+exports.getArticleById = async (req, res) => {
+  try {
+    const article = await Article.findById(req.params.id);
+    if (!article) {
+      return res.status(404).json({ message: "لم يتم العثور على المقال" });
+    }
+    res.json(article);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 // مقالات حسب التصنيف
 exports.getArticlesByCategory = async (req, res) => {
   try {
