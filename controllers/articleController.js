@@ -87,3 +87,17 @@ exports.deleteArticle = async (req, res) => {
 };
 
 
+exports.searchByTitle = async (req, res) => {
+  const query = req.query.q || ""; // ?q=كلمة
+
+  try {
+    const results = await Article.find({
+      title: { $regex: query, $options: "i" }, // غير حساس لحالة الحروف
+    });
+
+    res.json(results);
+  } catch (error) {
+    console.error("خطأ في البحث:", error);
+    res.status(500).json({ message: "حدث خطأ أثناء البحث" });
+  }
+};
